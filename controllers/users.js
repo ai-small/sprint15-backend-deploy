@@ -1,25 +1,28 @@
 const mongoose = require('mongoose');
 const User = require('../models/user');
+const NotFoundError = require('../errors/notFoundError');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send({ data: users }))
-    .catch((err) => res.status(500).send({ message: `На сервере произошла ошибка: ${err.message}` }));
+    .catch(next);
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     User.findById(req.params.id)
       .then((user) => {
-        if (user) {
-          res.status(200).send({ data: user });
-        } else res.status(404).send({ message: 'User not found' });
+        if (!user) {
+          throw new NotFoundError('User not found');
+        } else res.status(200).send({ data: user });
       })
-      .catch((err) => res.status(500).send({ message: `На сервере произошла ошибка: ${err.message}` }));
-  } else res.status(404).send({ message: 'User not found' });
+      .catch(next);
+  } else {
+    next(new NotFoundError('User not found'));
+  }
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
@@ -33,12 +36,14 @@ const updateUser = (req, res) => {
     .then((user) => {
       if (user) {
         res.status(200).send({ data: user });
-      } else res.status(404).send({ message: 'User not found' });
+      } else {
+        throw new NotFoundError('User not found');
+      }
     })
-    .catch((err) => res.status(500).send({ message: `На сервере произошла ошибка: ${err.message}` }));
+    .catch(next);
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -51,9 +56,11 @@ const updateAvatar = (req, res) => {
     .then((user) => {
       if (user) {
         res.status(200).send({ data: user });
-      } else res.status(404).send({ message: 'User not found' });
+      } else {
+        throw new NotFoundError('User not found');
+      }
     })
-    .catch((err) => res.status(500).send({ message: `На сервере произошла ошибка: ${err.message}` }));
+    .catch(next);
 };
 
 module.exports = {
