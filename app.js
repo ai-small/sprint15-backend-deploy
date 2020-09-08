@@ -5,8 +5,8 @@ const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const singUpRouter = require('./routes/singup');
-const singInRouter = require('./routes/singin');
+const signUpRouter = require('./routes/signup');
+const signInRouter = require('./routes/signin');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const notFound = require('./routes/notFound');
@@ -34,8 +34,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/signin', singInRouter);
-app.use('/signup', singUpRouter);
+app.use('/signin', signInRouter);
+app.use('/signup', signUpRouter);
 
 app.use(auth);
 
