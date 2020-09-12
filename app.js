@@ -14,7 +14,7 @@ const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const celebrateErrorHandler = require('./middlewares/celebrateErrorHandler');
-const headerValidator = require('./validation/headerValidator');
+// const headerValidator = require('./validation/headerValidator');
 
 const app = express();
 const { PORT = 3000 } = process.env;
