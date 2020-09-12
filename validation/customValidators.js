@@ -1,5 +1,6 @@
 const check = require('validator');
 const ValidationError = require('../errors/validationError');
+const UnauthorizedError = require('../errors/unauthorizedError');
 
 const passwordValidator = (password) => {
   if (!password) {
@@ -25,4 +26,11 @@ const urlValidator = (link) => {
   return link;
 };
 
-module.exports = { passwordValidator, urlValidator };
+const authValidator = (authorization) => {
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    throw new UnauthorizedError('Необходима авторизация');
+  }
+  return authorization;
+};
+
+module.exports = { passwordValidator, urlValidator, authValidator };
