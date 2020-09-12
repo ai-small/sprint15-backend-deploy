@@ -14,7 +14,7 @@ const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const celebrateErrorHandler = require('./middlewares/celebrateErrorHandler');
-// const headerValidator = require('./validation/headerValidator');
+const { headerValidator } = require('./validation/headerValidator');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -42,7 +42,7 @@ app.use(requestLogger);
 app.use('/signin', signInRouter);
 app.use('/signup', signUpRouter);
 
-app.use(auth);
+app.use(headerValidator, auth);
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
