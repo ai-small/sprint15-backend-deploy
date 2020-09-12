@@ -12,18 +12,6 @@ const createUser = (req, res, next) => {
     password,
   } = req.body;
 
-  if (!password) {
-    throw new ValidationError('Empty password!');
-  }
-
-  if (check.isEmpty(password, { ignore_whitespace: true })) {
-    throw new ValidationError('Empty password or password contains only spaces!');
-  }
-
-  if (!check.isLength(password, { min: 8 })) {
-    throw new ValidationError('Password length less then 8 symbols!');
-  }
-
   if (!check.isEmail(email)) {
     throw new ValidationError('E-mail is not a valid!');
   }

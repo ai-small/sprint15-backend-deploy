@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-// const UnauthorizedError = require('../errors/unauthorizedError');
 
 const login = (req, res, next) => {
   const { NODE_ENV, JWT_SECRET = 'dev-secret' } = process.env;

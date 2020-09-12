@@ -12,6 +12,7 @@ const cardsRouter = require('./routes/cards');
 const notFound = require('./routes/notFound');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
+const celebrateErrorHandler = require('./middlewares/celebrateErrorHandler');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -43,6 +44,7 @@ app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use(notFound);
 
+app.use(celebrateErrorHandler);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
