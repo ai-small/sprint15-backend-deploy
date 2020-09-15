@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs');
 const check = require('validator');
 const User = require('../models/user');
+const ValidationError = require('../errors/validationError');
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -11,20 +12,8 @@ const createUser = (req, res) => {
     password,
   } = req.body;
 
-  if (!password) {
-    return res.status(400).send({ message: 'Пустой пароль!' });
-  }
-
-  if (check.isEmpty(password, { ignore_whitespace: true })) {
-    return res.status(400).send({ message: 'Пароль не может состоять из пробелов или быть пустым!' });
-  }
-
-  if (!check.isLength(password, { min: 6 })) {
-    return res.status(400).send({ message: 'Минимальная длина пароля - 6 символов' });
-  }
-
   if (!check.isEmail(email)) {
-    return res.status(400).send({ message: 'E-mail is not a valid!' });
+    throw new ValidationError('E-mail is not a valid!');
   }
 
   return bcrypt.hash(password, 10)
@@ -41,15 +30,7 @@ const createUser = (req, res) => {
       avatar: user.avatar,
       email: user.email,
     }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: err.message });
-      }
-      if (err.code === 11000) {
-        return res.status(409).send({ message: err.message });
-      }
-      return res.status(500).send({ message: `На сервере произошла ошибка: ${err.message}` });
-    });
+    .catch(next);
 };
 
 module.exports = { createUser };

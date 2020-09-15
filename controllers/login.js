@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { NODE_ENV, JWT_SECRET = 'dev-secret' } = process.env;
   const { email, password } = req.body;
 
@@ -21,9 +21,7 @@ const login = (req, res) => {
         })
         .end();
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch(next);
 };
 
 module.exports = { login };
